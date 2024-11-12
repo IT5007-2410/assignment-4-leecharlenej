@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Alert } from 'react-native';
+import { Alert, TouchableOpacity } from 'react-native';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import { Picker } from '@react-native-picker/picker';
 
@@ -87,15 +87,26 @@ const styles = StyleSheet.create({
   dataWrapper: { marginTop: -1 },
   row: { height: 40, backgroundColor: '#E7E6E1'},
   
-  subHeader : {fontWeight: 'bold'},
+  topHeader : { fontSize: 18, fontWeight: 'bold', marginBottom: 10, textAlign: 'center'},
+  subHeader : { fontWeight: 'bold', marginBottom: 10, },
+  horizontalLine: { borderBottomColor: '#ccc', borderBottomWidth: 1, marginVertical: 10, },
 
-  formLabel: {  marginRight: 10, fontWeight: 'bold', width: 50},
-  formRow: { flexDirection: 'row', alignItems: 'center', marginBottom: -20},
-  picker: {width: 150 },
+  buttonRow: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, },
+  button: { paddingVertical: 10, paddingHorizontal: 15, backgroundColor: '#007BFF', borderRadius: 5, },
+  buttonText: {color: '#fff', textTransform: 'none',  },
+
+  formLabel: {  marginRight: 10, fontWeight: 'bold', width: 50 },
+  formRow: { flexDirection: 'row', alignItems: 'center', marginBottom: -20 },
+  picker: { width: 150 },
   pickerItem: { fontSize: 15 },
   });
 
 const width= [40,80,80,50,80,80,200];
+
+/* -------------------------------------------
+   Section: Helper funtions
+------------------------------------------- */
+
 
 /* -------------------------------------------
    Section: Code
@@ -154,13 +165,13 @@ function IssueRow(props) {
 
     getInitialState() {
       const oneWeekLater= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-      return {status: 'New', owner: '', effort: '', due: oneWeekLater, title: ''};
+      return {status: 'New', owner: '', effort: 0, due: oneWeekLater, title: ''};
     }
 
   
     /****** Q3: Start Coding here. Add functions to hold/set state input based on changes in TextInput******/
     setField(field, input){
-      if (field === 'effort') {
+      if (field === 'effort' && input !== null) {
 
         const effortValue = parseInt(input, 10) || 0; // 0 if not a valid number.
         this.setState({ [field]: effortValue });
@@ -299,16 +310,17 @@ class BlackList extends React.Component {
 export default class IssueList extends React.Component {
     constructor() {
         super();
-        this.state = { issues: [] };
+        this.state = { issues: [], display: 1 };
         this.createIssue = this.createIssue.bind(this);
+        this.setDisplay = this.setDisplay.bind(this);
+    }
+
+    setDisplay(value){
+      this.setState({display: value});
     }
     
     componentDidMount() {
     this.loadData();
-    }
-
-    componentDidUpdate(){
-      this.loadData();
     }
 
     async loadData() {
@@ -339,27 +351,50 @@ export default class IssueList extends React.Component {
     }
     }
     
-    
     render() {
     return (
     <>
-    {/****** Q1: Start Coding here. ******/}
-    <IssueFilter />
-    {/****** Q1: Code ends here ******/}
+      <Text style={styles.topHeader}>Issue Tracker</Text>
+      <View style={styles.buttonRow}>
+        <TouchableOpacity onPress={() => this.setDisplay(1)} style={styles.button}>
+          <Text style={styles.buttonText}>Issue Filter</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => this.setDisplay(2)} style={styles.button}>
+          <Text style={styles.buttonText}>Issue Table</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => this.setDisplay(3)} style={styles.button}>
+          <Text style={styles.buttonText}>Issue Add</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => this.setDisplay(4)} style={styles.button}>
+          <Text style={styles.buttonText}>Blacklist</Text>
+        </TouchableOpacity>
+
+        {/* <Button onPress={()=>this.setDisplay(1)} title="Issue Filter"/>
+        <Button onPress={()=>this.setDisplay(2)} title="Issue Table"/>
+        <Button onPress={()=>this.setDisplay(3)} title="Issue Add"/>
+        <Button onPress={()=>this.setDisplay(4)} title="Blacklist"/> */}
+      </View>
+
+      {/****** Q1: Start Coding here. ******/}
+      {this.state.display === 1 ? <IssueFilter /> : <View style={styles.horizontalLine} />}
+      {/****** Q1: Code ends here ******/}
 
 
-    {/****** Q2: Start Coding here. ******/}
-    <IssueTable issues={this.state.issues} />
-    {/****** Q2: Code ends here ******/}
+      {/****** Q2: Start Coding here. ******/}
+      {this.state.display === 2 ? <IssueTable issues={this.state.issues} /> : <View style={styles.horizontalLine} />}
+      {/****** Q2: Code ends here ******/}
 
-    
-    {/****** Q3: Start Coding here. ******/}
-    <IssueAdd createIssue={this.createIssue}/>
-    {/****** Q3: Code Ends here. ******/}
+      
+      {/****** Q3: Start Coding here. ******/}
+      {this.state.display === 3 ?  <IssueAdd createIssue={this.createIssue}/> : <View style={styles.horizontalLine} />}
+      {/****** Q3: Code Ends here. ******/}
 
-    {/****** Q4: Start Coding here. ******/}
-    <BlackList />
-    {/****** Q4: Code Ends here. ******/}
+      {/****** Q4: Start Coding here. ******/}
+      {this.state.display === 4 ?  <BlackList /> : <View style={styles.horizontalLine} />}
+      {/****** Q4: Code Ends here. ******/}
     </>
       
     );
