@@ -5,7 +5,7 @@ To install:
 |No.| Steps | Command |
 |---|-------|---------|
 |1. | Follow instructions given in repo | |
-|2. | To install ReactNative | npx react-native@0.73 init AwesomeProject --version 0.73 |
+|2. | To install ReactNative | npx react-native@0.73 init assignment4 --version 0.73 |
 
 To run server:
 |No.| Steps | Command |
@@ -19,8 +19,15 @@ To run server:
 To run app:
 |No.| Steps | Command |
 |---|-------|---------|
-|1. | Go into AwesomeProject folder. | cd AwesomeProject |
-|2. | Start application. | npm run android |
+|1. | Go into assignment4 folder. | cd assignment4 |
+|2. | Install dependencies. | npm install |
+|3. | Start application. | npm run android |
+
+Following libraries have been installed:
+|No.| Library | Command |
+|---|---------|---------|
+|1. | React Native Table Component | npm install react-native-table-component --save |
+|2. | React Native Picker | npm install @react-native-picker/picker --save |
 
 ---
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
